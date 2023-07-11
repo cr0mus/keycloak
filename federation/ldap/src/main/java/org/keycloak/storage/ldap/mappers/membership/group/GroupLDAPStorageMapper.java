@@ -590,7 +590,6 @@ public class GroupLDAPStorageMapper extends AbstractLDAPStorageMapper implements
         LDAPObject ldapGroup = loadLDAPGroupByName(groupName);
         Map<String, List<String>> attr = kcGroup.getAttributes();
         if ((ldapGroup == null) && ldapGroupsIds.containsKey(groupName)){
-            System.out.println("Try use existing group");
             ldapGroup = ldapGroupsIds.get(groupName);
         }
 
@@ -744,6 +743,9 @@ public class GroupLDAPStorageMapper extends AbstractLDAPStorageMapper implements
 
                 ldapQuery.addWhereCondition(roleNameCondition).addWhereCondition(membershipCondition);
                 LDAPObject ldapGroup = ldapQuery.getFirstResult();
+                if ((ldapGroup == null) && ldapGroupsIds.containsKey(group.getName())){
+                    ldapGroup = ldapGroupsIds.get(group.getName());
+                }
 
                 if (ldapGroup == null) {
                     // Group mapping doesn't exist in LDAP. For LDAP_ONLY mode, we don't need to do anything. For READ_ONLY, delete it in local DB.
